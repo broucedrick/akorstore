@@ -91,7 +91,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(getTranslated('SEARCH_HISTORY', context), style: robotoBold),
+                            Text('Historique', style: robotoBold),
                             InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 onTap: () {
@@ -100,7 +100,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: Container(
                                     padding: EdgeInsets.all(5),
                                     child: Text(
-                                      getTranslated('REMOVE', context),
+                                      'Supprimer',
                                       style: titilliumRegular.copyWith(
                                           fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.COLUMBIA_BLUE),
                                     )))

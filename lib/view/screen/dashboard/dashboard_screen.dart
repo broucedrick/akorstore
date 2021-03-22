@@ -50,11 +50,11 @@ class DashBoardScreen extends StatelessWidget {
           isLtr: Provider.of<LocalizationProvider>(context).isLtr,
           isDark: Provider.of<ThemeProvider>(context).darkTheme,
           tabs: [
-            FancyTabData(imagePath: Images.home_image, title: getTranslated('home', context)),
+            FancyTabData(imagePath: Images.home_image, title: "Accueil"),
             //FancyTabData(imagePath: Images.message_image, title: getTranslated('inbox', context)),
-            FancyTabData(imagePath:Images.shopping_image, title: getTranslated('orders', context)),
+            FancyTabData(imagePath:Images.shopping_image, title: "Commandes"),
             FancyTabData(imagePath: Images.notification, title: getTranslated('notification', context)),
-            FancyTabData(imagePath: Images.more_image, title: getTranslated('more', context)),
+            FancyTabData(imagePath: Images.more_image, title: "Plus"),
           ],
           onTabChangedListener: (int index) {
             _pageController.jumpToPage(index);

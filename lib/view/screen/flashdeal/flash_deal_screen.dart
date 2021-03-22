@@ -16,11 +16,11 @@ class FlashDealScreen extends StatelessWidget {
     return Scaffold(
       body: Column(children: [
         
-        CustomAppBar(title: getTranslated('flash_deal', context)),
+        CustomAppBar(title: "Publicités"),
         
         Padding(
           padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-          child: TitleRow(title: getTranslated('flash_deal', context), eventDuration: Provider.of<MegaDealProvider>(context).duration),
+          child: TitleRow(title: "Publicités", eventDuration: Provider.of<MegaDealProvider>(context).duration),
         ),
 
         Expanded(child: Padding(

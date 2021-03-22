@@ -160,12 +160,12 @@ class HomePageTest extends StatelessWidget {
                   builder: (context, flashDeal, child) {
                     return flashDeal.megaDealList.length > 0 ? Padding(
                       padding: EdgeInsets.fromLTRB(Dimensions.PADDING_SIZE_SMALL, 20, Dimensions.PADDING_SIZE_SMALL, Dimensions.PADDING_SIZE_SMALL),
-                      child: TitleRow(title: getTranslated('flash_deal', context), onTap: (){
+                      child: TitleRow(title: "Publicités", onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (_) => FlashDealScreen()));
                       }),
                     ) : flashDeal.megaDealList[0].id != null ? Padding(
                       padding: EdgeInsets.fromLTRB(Dimensions.PADDING_SIZE_SMALL, 20, Dimensions.PADDING_SIZE_SMALL, Dimensions.PADDING_SIZE_SMALL),
-                      child: TitleRow(title: getTranslated('flash_deal', context), eventDuration: flashDeal.megaDealList.length > 0 ? flashDeal.duration : null, onTap: (){
+                      child: TitleRow(title: "Publicités", eventDuration: flashDeal.megaDealList.length > 0 ? flashDeal.duration : null, onTap: (){
                         Navigator.push(context, PageRouteBuilder(
                             transitionDuration: Duration(milliseconds: 1000),
                             pageBuilder: (context, anim1, anim2) =>  FlashDealScreen()));
