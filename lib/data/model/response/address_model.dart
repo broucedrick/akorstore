@@ -5,7 +5,7 @@ class AddressModel {
   String addressType;
   String address;
   String city;
-  String zip;
+  //String zip;
   String phone;
   String createdAt;
   String updatedAt;
@@ -17,7 +17,7 @@ class AddressModel {
         this.addressType,
         this.address,
         this.city,
-        this.zip,
+        // this.zip,
         this.phone,
         this.createdAt,
         this.updatedAt});
@@ -29,7 +29,7 @@ class AddressModel {
     addressType = json['address_type'];
     address = json['address'];
     city = json['city'];
-    zip = json['zip'];
+    // zip = json['zip'];
     phone = json['phone'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -43,7 +43,7 @@ class AddressModel {
     data['address_type'] = this.addressType;
     data['address'] = this.address;
     data['city'] = this.city;
-    data['zip'] = this.zip;
+    // data['zip'] = this.zip;
     data['phone'] = this.phone;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

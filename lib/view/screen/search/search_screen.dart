@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:core';
+import 'dart:core';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sixvalley_ui_kit/data/model/response/product_model_test.dart';
 import 'package:sixvalley_ui_kit/helper/network_info.dart';
 import 'package:sixvalley_ui_kit/localization/language_constrants.dart';
 import 'package:sixvalley_ui_kit/provider/search_provider.dart';
@@ -12,6 +17,7 @@ import 'package:sixvalley_ui_kit/view/basewidget/search_widget.dart';
 import 'package:sixvalley_ui_kit/view/screen/search/widget/search_product_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -19,6 +25,38 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+
+  String hote = "https://app.akorstore.com/api/";
+
+  List<Product> allProducts = [];
+
+  void getProducts(String query) async {
+    debugPrint("Fetching ...");
+    List products;
+    allProducts.clear();
+    var response = await http.get("${hote}produits?nom=$query");
+    int statusCode = response.statusCode;
+    if(statusCode == 200){
+      products = json.decode(response.body)['hydra:member'];
+      //debugPrint(products.toString());
+      products.forEach((element) {
+        //debugPrint(element['id'].toString());
+
+        setState(() {
+          allProducts.add(Product(element['id'], element['stockId'], element['photo'], element['nom'], element['description'], element['stock'], element['quantite'], element['prixVente'], element['categorieId'], element['createdAt'], element['updatedAt'], element['consumerId']));
+        });
+        //debugPrint(allProducts.toString());
+      });
+
+      debugPrint(allProducts.toString());
+    }else{
+      debugPrint("Erreur");
+    }
+    //debugPrint(allProducts.length.toString());
+    //return allProducts;
+
+  }
+
   @override
   Widget build(BuildContext context) {
     Provider.of<SearchProvider>(context, listen: false).cleanSearchProduct();
@@ -33,9 +71,10 @@ class _SearchScreenState extends State<SearchScreen> {
           SearchWidget(
             hintText: getTranslated('SEARCH_HINT', context),
             onSubmit: (String text) {
-              Provider.of<SearchProvider>(context, listen: false).cleanSearchProduct();
-              Provider.of<SearchProvider>(context, listen: false).searchProduct(text);
-              Provider.of<SearchProvider>(context, listen: false).saveSearchAddress(text);
+              //Provider.of<SearchProvider>(context, listen: false).cleanSearchProduct();
+              //Provider.of<SearchProvider>(context, listen: false).searchProduct(text);
+              //Provider.of<SearchProvider>(context, listen: false).saveSearchAddress(text);
+              getProducts(text);
             },
             onClearPressed: () {
               Provider.of<SearchProvider>(context, listen: false).cleanSearchProduct();
@@ -44,10 +83,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
           Consumer<SearchProvider>(
             builder: (context, searchProvider, child) {
-              return !searchProvider.isClear ? searchProvider.searchProductList != null ? searchProvider.searchProductList.length > 0
-                  ? Expanded(child: SearchProductWidget(products: searchProvider.searchProductList, isViewScrollable: true))
+              debugPrint("LENGTH : "+allProducts.length.toString());
+              return allProducts != null ? allProducts.length > 0
+                  ? Expanded(child: SearchProductWidget(products: allProducts, isViewScrollable: true))
                   : Expanded(child: NoInternetOrDataScreen(isNoInternet: false))
-                  : Expanded(child: ProductShimmer(isEnabled: Provider.of<SearchProvider>(context).searchProductList == null))
                   : Expanded(
                 flex: 4,
                 child: Container(

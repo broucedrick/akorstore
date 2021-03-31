@@ -87,7 +87,7 @@ void addressBottomSheet(AddressModel userInfoModel, BuildContext context,Functio
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${userInfoModel.zip} ${userInfoModel.address}',style: titilliumSemiBold),
+                              Text('${userInfoModel.address}',style: titilliumSemiBold),
                               Text('${userInfoModel.phone}',style: titilliumRegular),
                             ],
                           ),
@@ -138,7 +138,7 @@ void addressBottomSheet(AddressModel userInfoModel, BuildContext context,Functio
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${userInfoModel.zip} ${userInfoModel.address}',style: titilliumSemiBold),
+                              Text('${userInfoModel.address}',style: titilliumSemiBold),
                               Text('${userInfoModel.phone}',style: titilliumRegular),
                             ],
                           ),
@@ -155,14 +155,14 @@ void addressBottomSheet(AddressModel userInfoModel, BuildContext context,Functio
                 ),
                 SizedBox(height: 30,),
                 CustomButton(
-                  buttonText: getTranslated('SAVE_ADDRESS', context),
+                  buttonText: "Sauvegarder",
                   onTap: (){
                     if(Provider.of<ProfileProvider>(context,listen: false).checkOfficeAddress){
-                      String officeAddress = userInfoModel.zip + " " + userInfoModel.address;
+                      String officeAddress = userInfoModel.address;
                       Provider.of<ProfileProvider>(context, listen: false).saveOfficeAddress(officeAddress);
                       Navigator.of(context).pop();
                     }else if(Provider.of<ProfileProvider>(context,listen: false).checkHomeAddress){
-                      String homeAddress = userInfoModel.zip + " " + userInfoModel.address;
+                      String homeAddress = userInfoModel.address;
                       Provider.of<ProfileProvider>(context, listen: false).saveHomeAddress(homeAddress);
                       Navigator.of(context).pop();
                     }

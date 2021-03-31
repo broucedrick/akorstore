@@ -46,7 +46,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ProfileProvider>(context, listen: false).initAddressList();
+    String id = Provider.of<ProfileProvider>(context, listen: false).userInfoModel.id.toString();
+    Provider.of<ProfileProvider>(context, listen: false).initAddressList(id);
     Provider.of<ProfileProvider>(context, listen: false).initAddressTypeList();
     //Provider.of<OrderProvider>(context, listen: false).initShippingList();
     Provider.of<CouponProvider>(context, listen: false).removePrevCouponData();
@@ -94,9 +95,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         carts.add(Cart(
                           cart.id.toString(), cart.price.toInt(), cart.quantity));
                       }
-                      OrderModel _orderm = OrderModel(id: 106314, customerId: "1", cartProductList: widget.cartList, paymentStatus: "success", paymentMethod: "Orange Money", orderAmount: _order.toString(), shippingAddress: Provider.of<ProfileProvider>(context, listen: false).addressList[Provider.of<OrderProvider>(context, listen: false).addressIndex].address, createdAt: '12-12-20', orderStatus: 'pending');
+                      OrderModel _orderm = OrderModel(id: "106314", customerId: "1", cartProductList: widget.cartList, paymentStatus: "success", paymentMethod: "Orange Money", orderAmount: _order.toString(), shippingAddress: Provider.of<ProfileProvider>(context, listen: false).addressList[Provider.of<OrderProvider>(context, listen: false).addressIndex].address, createdAt: '12-12-20', orderStatus: 'pending');
                       debugPrint("ORDER ID : ${_orderm}");
-                      Provider.of<OrderProvider>(context, listen: false).addOrder(_orderm);
+                      Provider.of<OrderProvider>(context, listen: false).setOrder(_orderm);
                       // new OrderRepo.addOrder(_orderm);
                       debugPrint("ORDER OK !");
                       //double couponDiscount = Provider.of<CouponProvider>(context, listen: false).discount != null ? Provider.of<CouponProvider>(context, listen: false).discount : 0;

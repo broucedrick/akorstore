@@ -69,11 +69,12 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initAddressList() {
+  void initAddressList(String id) {
     _addressList = [];
-    profileRepo.getAllAddress().forEach((address) => _addressList.add(address));
+    profileRepo.getAllAddress(id).forEach((address) => _addressList.add(address));
     notifyListeners();
   }
+
 
   void removeAddressById(int id, int index) async {
     _isLoading = true;

@@ -3,7 +3,7 @@ import 'package:sixvalley_ui_kit/data/model/body/order_place_model.dart';
 import 'cart_model.dart';
 
 class OrderModel {
-  int _id;
+  String _id;
   String _customerId;
   String _customerType;
   String _paymentStatus;
@@ -19,7 +19,7 @@ class OrderModel {
   // String _discountType;
 
   OrderModel(
-      {int id,
+      {String id,
         String customerId,
         String customerType,
         String paymentStatus,
@@ -50,7 +50,7 @@ class OrderModel {
     // this._discountType = discountType;
   }
 
-  int get id => _id;
+  String get id => _id;
   String get customerId => _customerId;
   String get customerType => _customerType;
   String get paymentStatus => _paymentStatus;

@@ -82,7 +82,7 @@ class _AddAddressBottomSheetState extends State<AddAddressBottomSheet> {
               }),
               Divider(thickness: 0.7, color: ColorResources.GREY),
               CustomTextField(
-                hintText: getTranslated('ENTER_YOUR_ADDRESS', context),
+                hintText: "Entrez une adresse",
                 controller: _addressController,
                 textInputType: TextInputType.streetAddress,
                 focusNode: _buttonAddressFocus,
@@ -91,7 +91,7 @@ class _AddAddressBottomSheetState extends State<AddAddressBottomSheet> {
               ),
               Divider(thickness: 0.7, color: ColorResources.GREY),
               CustomTextField(
-                hintText: getTranslated('ENTER_YOUR_CITY', context),
+                hintText: "Entrez une ville",
                 controller: _cityNameController,
                 textInputType: TextInputType.streetAddress,
                 focusNode: _cityFocus,
@@ -116,7 +116,7 @@ class _AddAddressBottomSheetState extends State<AddAddressBottomSheet> {
                   return profileProvider.isLoading
                       ? CircularProgressIndicator(key: Key(''))
                       : CustomButton(
-                    buttonText: getTranslated('UPDATE_ADDRESS', context),
+                    buttonText: "Enregistrer",
                     onTap: () {
                       _addAddress();
                     },
@@ -151,7 +151,7 @@ class _AddAddressBottomSheetState extends State<AddAddressBottomSheet> {
       Provider.of<ProfileProvider>(context, listen: false).addAddress(addressModel);
       _cityNameController.clear();
       //_zipCodeController.clear();
-      Provider.of<ProfileProvider>(context, listen: false).initAddressList();
+      //Provider.of<ProfileProvider>(context, listen: false).initAddressList();
       Navigator.pop(context);
     }
   }

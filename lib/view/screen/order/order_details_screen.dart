@@ -37,7 +37,8 @@ class OrderDetails extends StatelessWidget {
     Provider.of<SellerProvider>(context, listen: false).removePrevOrderSeller();
     //debugPrint(order.id.toString());
     Provider.of<OrderProvider>(context, listen: false).getOrderDetails(order.id);
-    Provider.of<ProfileProvider>(context, listen: false).initAddressList();
+    String id = Provider.of<ProfileProvider>(context, listen: false).userInfoModel.id.toString();
+    Provider.of<ProfileProvider>(context, listen: false).initAddressList(id);
     //Provider.of<OrderProvider>(context, listen: false).initShippingList();
     NetworkInfo.checkConnectivity(context);
 
@@ -115,7 +116,7 @@ class OrderDetails extends StatelessWidget {
                       child: RichText(
                         text: TextSpan(
                           children: <TextSpan>[
-                            TextSpan(text: 'ID Commande', style: titilliumRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL)),
+                            TextSpan(text: 'ID Cde', style: titilliumRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL)),
                             TextSpan(text: order.id.toString(), style: titilliumSemiBold.copyWith(color: ColorResources.getPrimary(context))),
                           ],
                         ),

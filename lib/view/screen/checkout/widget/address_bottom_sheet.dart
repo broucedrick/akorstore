@@ -75,12 +75,12 @@ class AddressBottomSheet extends StatelessWidget {
               )  : Container(
                 alignment: Alignment.center,
                 margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_LARGE),
-                child: Text('No address available'),
+                child: Text('Aucune adresse disponible'),
               ) : Center(child: CircularProgressIndicator());
             },
           ),
 
-          CustomButton(buttonText: getTranslated('add_new_address', context), onTap: () {
+          CustomButton(buttonText: "Ajouter une adresse", onTap: () {
             Navigator.pop(context);
             showModalBottomSheet(
               context: context,

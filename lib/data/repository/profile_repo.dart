@@ -21,10 +21,11 @@ class ProfileRepo {
 
   UserInfoModel getUserInfo() {
     UserInfoModel userInfoModel = UserInfoModel(id: 1, name: 'John Doe', fName: 'John', lName: 'Doe', phone: '+886737663', email: 'johndoe@gmail.com', image: 'assets/images/person.jpg');
+
     return userInfoModel;
   }
 
-  List<AddressModel> getAllAddress() {
+  List<AddressModel> getAllAddress(String id) {
     List<AddressModel> addressList = [
       AddressModel(id: 1, customerId: '1', contactPersonName: 'John Doe', addressType: 'Home', address: 'Dhaka, Bangladesh'),
     ];

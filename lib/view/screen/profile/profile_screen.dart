@@ -84,7 +84,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     Provider.of<ProfileProvider>(context, listen: false).initAddressTypeList();
-    Provider.of<ProfileProvider>(context, listen: false).initAddressList();
+    String id = Provider.of<ProfileProvider>(context, listen: false).userInfoModel.id.toString();
+    Provider.of<ProfileProvider>(context, listen: false).initAddressList(id);
     NetworkInfo.checkConnectivity(context);
   }
 
