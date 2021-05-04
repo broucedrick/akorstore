@@ -5,6 +5,7 @@ import 'package:sixvalley_ui_kit/data/model/response/user_info_model.dart';
 import 'package:sixvalley_ui_kit/helper/network_info.dart';
 import 'package:sixvalley_ui_kit/localization/language_constrants.dart';
 import 'package:sixvalley_ui_kit/provider/profile_provider.dart';
+import 'package:sixvalley_ui_kit/provider/auth_provider.dart';
 import 'package:sixvalley_ui_kit/provider/theme_provider.dart';
 import 'package:sixvalley_ui_kit/utill/color_resources.dart';
 import 'package:sixvalley_ui_kit/utill/custom_themes.dart';
@@ -72,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       updateUserInfoModel.phone = _phoneController.text ?? '';
 
       await Provider.of<ProfileProvider>(context, listen: false).updateUserInfo(updateUserInfoModel);
-      Provider.of<ProfileProvider>(context, listen: false).getUserInfo();
+      Provider.of<ProfileProvider>(context, listen: false).getUserInfo(Provider.of<AuthProvider>(context, listen: false).getUserToken());
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Updated Successfully'), backgroundColor: ColorResources.GREEN));
       _passwordController.clear();
       _confirmPasswordController.clear();
@@ -84,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     Provider.of<ProfileProvider>(context, listen: false).initAddressTypeList();
-    String id = Provider.of<ProfileProvider>(context, listen: false).userInfoModel.id.toString();
+    String id = Provider.of<AuthProvider>(context, listen: false).getUserToken();
     Provider.of<ProfileProvider>(context, listen: false).initAddressList(id);
     NetworkInfo.checkConnectivity(context);
   }

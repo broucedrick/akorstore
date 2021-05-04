@@ -1,4 +1,5 @@
 class Images {
+  static const String small_logo = 'assets/images/small_logo.png';
   static const String akorit_text = 'assets/images/akorit_text.png';
   static const String more_filled_image = 'assets/images/more_filled.png';
   static const String cart_arrow_down_image = 'assets/images/cart_arrow_down.png';

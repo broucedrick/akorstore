@@ -26,13 +26,15 @@ import 'package:sixvalley_ui_kit/view/screen/setting/settings_screen.dart';
 import 'package:sixvalley_ui_kit/view/screen/support/support_ticket_screen.dart';
 import 'package:sixvalley_ui_kit/view/screen/wishlist/wishlist_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:nanoid/nanoid.dart';
 
 class MoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isGuestMode = !Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
-    Provider.of<ProfileProvider>(context, listen: false).getUserInfo();
+    Provider.of<ProfileProvider>(context, listen: false).getUserInfo(Provider.of<AuthProvider>(context, listen: false).getUserToken());
     NetworkInfo.checkConnectivity(context);
+    //debugPrint();
 
     return Scaffold(
       body: Stack(children: [
@@ -57,32 +59,32 @@ class MoreScreen extends StatelessWidget {
           child: Consumer<ProfileProvider>(
             builder: (context, profile, child) {
               return Row(children: [
-                Image.asset(Images.logo_with_name_image, height: 35, color: ColorResources.WHITE),
+                Image.asset(Images.akorit_text, height: 35, color: ColorResources.WHITE),
                 Expanded(child: SizedBox.shrink()),
-                Text(!isGuestMode ? profile.userInfoModel != null ? '${profile.userInfoModel.fName} ${profile.userInfoModel.lName}' : 'Full Name' : 'Guest',
-                    style: titilliumRegular.copyWith(color: ColorResources.WHITE)),
+                // Text(!isGuestMode ? profile.userInfoModel != null ? '${profile.userInfoModel.fName} ${profile.userInfoModel.lName}' : 'Full Name' : 'Guest',
+                //     style: titilliumRegular.copyWith(color: ColorResources.WHITE)),
                 SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                InkWell(
-                  onTap: () {
-                    if(isGuestMode) {
-                      showAnimatedDialog(context, GuestDialog(), isFlip: true);
-                    }else {
-                      if(Provider.of<ProfileProvider>(context, listen: false).userInfoModel != null) {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
-                      }
-                    }
-                  },
-                  child: isGuestMode ? CircleAvatar(child: Icon(Icons.person, size: 35)) :
-                  profile.userInfoModel == null ? CircleAvatar(child: Icon(Icons.person, size: 35)) : ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.asset(
-                      profile.userInfoModel.image,
-                      width: 35,
-                      height: 35,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
+                // InkWell(
+                //   onTap: () {
+                //     if(isGuestMode) {
+                //       showAnimatedDialog(context, GuestDialog(), isFlip: true);
+                //     }else {
+                //       if(Provider.of<ProfileProvider>(context, listen: false).userInfoModel != null) {
+                //         Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+                //       }
+                //     }
+                //   },
+                //   child: isGuestMode ? CircleAvatar(child: Icon(Icons.person, size: 35)) :
+                //   profile.userInfoModel == null ? CircleAvatar(child: Icon(Icons.person, size: 35)) : ClipRRect(
+                //     borderRadius: BorderRadius.circular(15),
+                //     child: Image.asset(
+                //       profile.userInfoModel.image,
+                //       width: 35,
+                //       height: 35,
+                //       fit: BoxFit.fill,
+                //     ),
+                //   ),
+                // ),
               ]);
             },
           ),

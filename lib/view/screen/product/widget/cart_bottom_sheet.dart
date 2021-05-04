@@ -97,8 +97,8 @@ class CartBottomSheet extends StatelessWidget {
                         color: ColorResources.getImageBg(context),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Image.asset(
-                        product.photo,
+                      child: Image.network(
+                        "https://www.akorstore.com/storage/images/${product.photo}",
                       ),
                     ),
                     SizedBox(width: 20),

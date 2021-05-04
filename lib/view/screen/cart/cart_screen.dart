@@ -76,7 +76,7 @@ class CartScreen extends StatelessWidget {
           ),
           Text('Tout', style: titilliumRegular.copyWith(color: Theme.of(context).accentColor)),
           Expanded(child: Center(child: Text(
-            PriceConverter.convertPrice(context, Provider.of<CartProvider>(context).amount),
+            "${Provider.of<CartProvider>(context).amount} FCFA",
             style: titilliumSemiBold.copyWith(color: Theme.of(context).accentColor),
           ))),
           Builder(
@@ -90,7 +90,7 @@ class CartScreen extends StatelessWidget {
                     }
                   }
                   if (cartList.length > 0) {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => CheckoutScreen(cartList: cartList)));
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => CheckoutScreen(cartList: cartList, cartLists: cartProductList,)));
                   } else {
                     showCustomSnackBar('Sélectionnez un produit au moins', context);
                   }

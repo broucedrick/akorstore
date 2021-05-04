@@ -40,7 +40,7 @@ class AuthScreen extends StatelessWidget{
                   SizedBox(height: 30),
 
                   // for logo with text
-                  Image.asset(Images.logo_with_name_image, height: 150, width: 200, color: ColorResources.getPrimary(context)),
+                  Image.asset(Images.akorit_text, height: 150, width: 200, color: ColorResources.getPrimary(context)),
 
                   // for decision making section like signin or register section
                   Padding(
@@ -66,7 +66,7 @@ class AuthScreen extends StatelessWidget{
                                 onTap: () => _pageController.animateToPage(0, duration: Duration(seconds: 1), curve: Curves.easeInOut),
                                 child: Column(
                                   children: [
-                                    Text(getTranslated('SIGN_IN', context), style: authProvider.selectedIndex == 0 ? titilliumSemiBold : titilliumRegular),
+                                    Text("Connexion", style: authProvider.selectedIndex == 0 ? titilliumSemiBold : titilliumRegular),
                                     Container(
                                       height: 1,
                                       width: 40,
@@ -81,7 +81,7 @@ class AuthScreen extends StatelessWidget{
                                 onTap: () => _pageController.animateToPage(1, duration: Duration(seconds: 1), curve: Curves.easeInOut),
                                 child: Column(
                                   children: [
-                                    Text(getTranslated('SIGN_UP', context), style: authProvider.selectedIndex == 1 ? titilliumSemiBold : titilliumRegular),
+                                    Text("Inscription", style: authProvider.selectedIndex == 1 ? titilliumSemiBold : titilliumRegular),
                                     Container(
                                         height: 1,
                                         width: 50,

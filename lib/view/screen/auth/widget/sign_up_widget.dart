@@ -44,33 +44,42 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       isEmailVerified = true;
 
       if (_firstNameController.text.isEmpty) {
-        showCustomSnackBar(getTranslated('NAME_FIELD_MUST_BE_REQUIRED', context), context);
+        showCustomSnackBar("Entrez votre nom", context);
       } else if (_emailController.text.isEmpty) {
-        showCustomSnackBar(getTranslated('EMAIL_MUST_BE_REQUIRED', context), context);
+        showCustomSnackBar("Entrez un email", context);
       } else if (_phoneController.text.isEmpty) {
-        showCustomSnackBar(getTranslated('PHONE_MUST_BE_REQUIRED', context), context);
+        showCustomSnackBar("Entrez un numéro de téléphone", context);
       } else if (_passwordController.text.isEmpty) {
-        showCustomSnackBar(getTranslated('PASSWORD_MUST_BE_REQUIRED', context), context);
+        showCustomSnackBar("Entrez un mot de passe", context);
       } else if (_confirmPasswordController.text.isEmpty) {
-        showCustomSnackBar(getTranslated('CONFIRM_PASSWORD_MUST_BE_REQUIRED', context), context);
+        showCustomSnackBar("Confirmezvotre mot de passe", context);
       } else if (_passwordController.text != _confirmPasswordController.text) {
-        showCustomSnackBar(getTranslated('PASSWORD_DID_NOT_MATCH', context), context);
+        showCustomSnackBar("Mot de passe non similaire", context);
       } else {
         register.fName = '${_firstNameController.text}';
         register.lName = _lastNameController.text ?? " ";
         register.email = _emailController.text;
         register.phone = _phoneController.text;
         register.password = _passwordController.text;
-        await Provider.of<AuthProvider>(context, listen: false).registration(register);
-        Provider.of<ProfileProvider>(context, listen: false).getUserInfo();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DashBoardScreen()));
+        await Provider.of<AuthProvider>(context, listen: false).registration(register).then((value){
+          if(value){
+            _emailController.clear();
+            _passwordController.clear();
+            _firstNameController.clear();
+            _lastNameController.clear();
+            _phoneController.clear();
+            _confirmPasswordController.clear();
 
-        _emailController.clear();
-        _passwordController.clear();
-        _firstNameController.clear();
-        _lastNameController.clear();
-        _phoneController.clear();
-        _confirmPasswordController.clear();
+            //showCustomSnackBar("Incription effectuée", context, isError: false);
+            //showCustomSnackBar("Connectez-vous", context, isError: false);
+          }else{
+            //showCustomSnackBar("Veuillez réessayer", context);
+          }
+        });
+        //Provider.of<ProfileProvider>(context, listen: false).getUserInfo();
+        //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DashBoardScreen()));
+
+
       }
     } else {
       isEmailVerified = false;
@@ -100,7 +109,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   children: [
                     Expanded(
                         child: CustomTextField(
-                      hintText: getTranslated('FIRST_NAME', context),
+                      hintText: "Prénom(s)",
                       textInputType: TextInputType.name,
                       focusNode: _fNameFocus,
                       nextNode: _lNameFocus,
@@ -110,7 +119,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                     SizedBox(width: 15),
                     Expanded(
                         child: CustomTextField(
-                      hintText: getTranslated('LAST_NAME', context),
+                      hintText: "Nom",
                       focusNode: _lNameFocus,
                       nextNode: _emailFocus,
                       controller: _lastNameController,
@@ -123,7 +132,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               Container(
                 margin: EdgeInsets.only(left: Dimensions.MARGIN_SIZE_DEFAULT, right: Dimensions.MARGIN_SIZE_DEFAULT, top: Dimensions.MARGIN_SIZE_SMALL),
                 child: CustomTextField(
-                  hintText: getTranslated('ENTER_YOUR_EMAIL', context),
+                  hintText: "Email",
                   focusNode: _emailFocus,
                   nextNode: _phoneFocus,
                   textInputType: TextInputType.emailAddress,
@@ -137,7 +146,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 margin: EdgeInsets.only(left: Dimensions.MARGIN_SIZE_DEFAULT, right: Dimensions.MARGIN_SIZE_DEFAULT, top: Dimensions.MARGIN_SIZE_SMALL),
                 child: CustomTextField(
                   textInputType: TextInputType.number,
-                  hintText: getTranslated('ENTER_MOBILE_NUMBER', context),
+                  hintText: "Numéro",
                   focusNode: _phoneFocus,
                   nextNode: _passwordFocus,
                   controller: _phoneController,
@@ -149,7 +158,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               Container(
                 margin: EdgeInsets.only(left: Dimensions.MARGIN_SIZE_DEFAULT, right: Dimensions.MARGIN_SIZE_DEFAULT, top: Dimensions.MARGIN_SIZE_SMALL),
                 child: CustomPasswordTextField(
-                  hintTxt: getTranslated('PASSWORD', context),
+                  hintTxt: "Mot de passe",
                   controller: _passwordController,
                   focusNode: _passwordFocus,
                   nextNode: _confirmPasswordFocus,
@@ -161,7 +170,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               Container(
                 margin: EdgeInsets.only(left: Dimensions.MARGIN_SIZE_DEFAULT, right: Dimensions.MARGIN_SIZE_DEFAULT, top: Dimensions.MARGIN_SIZE_SMALL),
                 child: CustomPasswordTextField(
-                  hintTxt: getTranslated('RE_ENTER_PASSWORD', context),
+                  hintTxt: "Mot de passe",
                   controller: _confirmPasswordController,
                   focusNode: _confirmPasswordFocus,
                   textInputAction: TextInputAction.done,
@@ -174,7 +183,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
         // for register button
         Container(
           margin: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 40),
-          child: CustomButton(onTap: addUser, buttonText: getTranslated('SIGN_UP', context)),
+          child: CustomButton(onTap: addUser, buttonText: "Inscription"),
         ),
 
         // for skip for now
@@ -183,7 +192,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 onPressed: () {
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => DashBoardScreen()));
                 },
-                child: Text(getTranslated('SKIP_FOR_NOW', context),
+                child: Text("Continuer sans s'inscrire",
                     style: titilliumRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.getColombiaBlue(context))),
               )),
       ],

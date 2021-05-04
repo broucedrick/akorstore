@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:sixvalley_ui_kit/data/model/response/product_model_test.dart';
 import 'package:sixvalley_ui_kit/data/repository/product_repo.dart';
+import 'package:http/http.dart' as http;
 
 class ProductProvider extends ChangeNotifier {
   final ProductRepo productRepo;
@@ -15,7 +18,22 @@ class ProductProvider extends ChangeNotifier {
 
   void initLatestProductList() async {
     _latestProductList = [];
-    _latestProductList.addAll(productRepo.getLatestProductList());
+    var response = await http.get("https://app.akorstore.com/api/produits");
+    int statusCode = response.statusCode;
+    if(statusCode == 200){
+      List res = json.decode(response.body)['hydra:member'];
+      //debugPrint(products.toString());
+      res.forEach((element) {
+        //debugPrint(element['id'].toString());
+        _latestProductList.add(Product(element['id'], element['stockId'], element['photo'], element['nom'], element['description'], element['stock'], element['quantite'], element['prixVente'], element['categorieId'], element['createdAt'], element['updatedAt'], element['consumerId']));
+        //debugPrint(allProducts.toString());
+        notifyListeners();
+      });
+
+    }else{
+      debugPrint("Erreur");
+    }
+    //_latestProductList.addAll(productRepo.getLatestProductList());
     _firstLoading = false;
     notifyListeners();
   }

@@ -40,8 +40,8 @@ class CartWidget extends StatelessWidget {
 
         Padding(
           padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-          child: Image.asset(
-            cartModel.image,
+          child: Image.network(
+            "https://www.akorstore.com/storage/images/${cartModel.image}",
             height: 50,
             width: 50,
           ),

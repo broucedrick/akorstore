@@ -41,7 +41,7 @@ class ProductWidget extends StatelessWidget {
                   color: ColorResources.getIconBg(context),
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                 ),
-                child: Image.network(productModel.photo),
+                child: Image.network("https://www.akorstore.com/storage/images/${productModel.photo}"),
               ),
             ),
 

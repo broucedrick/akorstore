@@ -26,6 +26,7 @@ import 'package:sixvalley_ui_kit/view/screen/seller/seller_screen.dart';
 import 'package:sixvalley_ui_kit/view/screen/support/support_ticket_screen.dart';
 import 'package:sixvalley_ui_kit/view/screen/tracking/tracking_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:sixvalley_ui_kit/provider/auth_provider.dart';
 
 class OrderDetails extends StatelessWidget {
   final OrderModel order;
@@ -36,8 +37,8 @@ class OrderDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     Provider.of<SellerProvider>(context, listen: false).removePrevOrderSeller();
     //debugPrint(order.id.toString());
-    Provider.of<OrderProvider>(context, listen: false).getOrderDetails(order.id);
-    String id = Provider.of<ProfileProvider>(context, listen: false).userInfoModel.id.toString();
+    //Provider.of<OrderProvider>(context, listen: false).getOrderDetails(order.id);
+    String id = Provider.of<AuthProvider>(context, listen: false).getUserToken();
     Provider.of<ProfileProvider>(context, listen: false).initAddressList(id);
     //Provider.of<OrderProvider>(context, listen: false).initShippingList();
     NetworkInfo.checkConnectivity(context);
@@ -56,38 +57,10 @@ class OrderDetails extends StatelessWidget {
                 List<String> sellerList = [];
                 List<List<OrderDetailsModel>> sellerProductList = [];
                 double _order = 0;
-                //double _discount = 0;
-                //double _tax = 0;
-                //String shippingPartner = '';
                 double _shippingFee = 0;
                 String shippingAddress = '';
 
                 if(this.ord != null) {
-                  // ord.forEach((orderDetails) {
-                  //   if(!sellerList.contains(orderDetails.productDetails.seller)) {
-                  //     sellerList.add(orderDetails.productDetails.seller);
-                  //   }
-                  // });
-                  // sellerList.forEach((seller) {
-                  //   if(seller != '1') {
-                  //     Provider.of<SellerProvider>(context, listen: false).initSeller(seller);
-                  //   }
-                  //   List<OrderDetailsModel> orderList = [];
-                  //   ord.forEach((orderDetails) {
-                  //     if(seller == orderDetails.productDetails.seller) {
-                  //       orderList.add(orderDetails);
-                  //     }
-                  //   });
-                  //   sellerProductList.add(orderList);
-                  // });
-
-                  // List<OrderDetailsModel> orderList = [];
-                  // ord.forEach((orderDetails) {
-                  //   //if(seller == orderDetails.productDetails.seller) {
-                  //     orderList.add(orderDetails);
-                  //   //}
-                  // });
-                  // sellerProductList.add(orderList);
                   debugPrint("OK");
                   ord.forEach((orderDetails) {
                     _order = _order + (double.parse(orderDetails.price) * double.parse(orderDetails.qty));
@@ -96,14 +69,6 @@ class OrderDetails extends StatelessWidget {
                     //_tax = _tax + (double.parse('10') * double.parse(orderDetails.qty));
                   });
 
-                  // if(orderDetails.shippingList != null) {
-                  //   orderDetails.shippingList.forEach((shipping) {
-                  //     if(shipping.id.toString() == orderDetails.orderDetails[0].shippingMethodId) {
-                  //       shippingPartner = shipping.title;
-                  //       _shippingFee = double.parse(shipping.cost);
-                  //     }
-                  //   });
-                  // }
                 }
 
                 return ord != null ? ListView(

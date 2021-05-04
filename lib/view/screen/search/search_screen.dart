@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:sixvalley_ui_kit/data/model/response/product_model_test.dart';
 import 'package:sixvalley_ui_kit/helper/network_info.dart';
 import 'package:sixvalley_ui_kit/localization/language_constrants.dart';
+import 'package:sixvalley_ui_kit/provider/product_provider.dart';
 import 'package:sixvalley_ui_kit/provider/search_provider.dart';
 import 'package:sixvalley_ui_kit/utill/color_resources.dart';
 import 'package:sixvalley_ui_kit/utill/custom_themes.dart';
@@ -30,28 +31,42 @@ class _SearchScreenState extends State<SearchScreen> {
 
   List<Product> allProducts = [];
 
-  void getProducts(String query) async {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<ProductProvider>(context, listen: false).initLatestProductList();
+  }
+
+  void getProducts(String query) {
     debugPrint("Fetching ...");
     List products;
     allProducts.clear();
-    var response = await http.get("${hote}produits?nom=$query");
-    int statusCode = response.statusCode;
-    if(statusCode == 200){
-      products = json.decode(response.body)['hydra:member'];
-      //debugPrint(products.toString());
-      products.forEach((element) {
-        //debugPrint(element['id'].toString());
-
+    Provider.of<ProductProvider>(context, listen: false).latestProductList.forEach((element) {
+      if(element.nom.toLowerCase().contains(query.toLowerCase())){
         setState(() {
-          allProducts.add(Product(element['id'], element['stockId'], element['photo'], element['nom'], element['description'], element['stock'], element['quantite'], element['prixVente'], element['categorieId'], element['createdAt'], element['updatedAt'], element['consumerId']));
+          allProducts.add(element);
         });
-        //debugPrint(allProducts.toString());
-      });
+      }
+    });
+    // var response = await http.get("${hote}produits");
+    // int statusCode = response.statusCode;
+    // if(statusCode == 200){
+    //   products = json.decode(response.body)['hydra:member'];
+    //   //debugPrint(products.toString());
+    //   products.forEach((element) {
+    //     //debugPrint(element['id'].toString());
+    //
+    //     if (element['nom'].toString().contains(query)) {
+    //       setState(() {
+    //         allProducts.add(Product(element['id'], element['stockId'], element['photo'], element['nom'], element['description'], element['stock'], element['quantite'], element['prixVente'], element['categorieId'], element['createdAt'], element['updatedAt'], element['consumerId']));
+    //       });
+    //     }
+    //     //debugPrint(allProducts.toString());
+    //   });
 
       debugPrint(allProducts.toString());
-    }else{
-      debugPrint("Erreur");
-    }
+
     //debugPrint(allProducts.length.toString());
     //return allProducts;
 

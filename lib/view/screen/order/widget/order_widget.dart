@@ -18,21 +18,23 @@ class OrderWidget extends StatelessWidget {
   final OrderModel orderModel;
   OrderWidget({this.orderModel});
 
-
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        debugPrint('cart : ${orderModel.cartProductList.length.toString()}');
+        //debugPrint('cart : ${orderModel.cartProductList.length.toString()}');
         List<OrderDetailsModel> ord = [];
-        var response = await http.get("http://app.akorstore.com/api/cproduits?idCommande=${orderModel.id}");
+        var response = await http.get("https://app.akorstore.com/api/cproduits?idCommande=${orderModel.id}");
         if(response.statusCode == 200){
           List res = json.decode(response.body)['hydra:member'];
           res.forEach((element) {
- /* */           CartModel cart = CartModel(element['idProduit'], element['image'], element['nom'], element['idVendeur'], element['somme'], element['quantite']);
-            OrderDetailsModel odm = OrderDetailsModel(id: element['id'], orderId: element['idCommande'].toString(), sellerId: element['idVendeur'], productDetails: cart, qty: element['quantite'].toString(), price: element['somme'].toString(), deliveryStatus: orderModel.orderStatus, paymentStatus: orderModel.paymentStatus, createdAt: orderModel.createdAt);
-            ord.add(odm);
+
+ /* */       if(element['idCommande'] == orderModel.id){
+              debugPrint(element.toString());
+              CartModel cart = CartModel(element['idProduit'], element['image'], element['name'], element['idVendeur'], element['somme'], element['quantite']);
+              OrderDetailsModel odm = OrderDetailsModel(id: element['id'], orderId: element['idCommande'].toString(), sellerId: element['idVendeur'], productDetails: cart, qty: element['quantite'].toString(), price: element['somme'].toString(), deliveryStatus: orderModel.orderStatus, paymentStatus: orderModel.paymentStatus, createdAt: orderModel.createdAt);
+              ord.add(odm);
+            }
           });
           debugPrint('cart n : ${ord.length.toString()}');
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => OrderDetails(order: orderModel, ord: ord)));

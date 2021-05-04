@@ -36,12 +36,12 @@ class ProductImageView extends StatelessWidget {
             child: Stack(children: [
               SizedBox(
                 height: MediaQuery.of(context).size.width - 100,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 20, 20, 50),
+                child: Container(
+                  //padding: EdgeInsets.fromLTRB(20, 20, 20, 50),
                   child: Hero(
                     tag: 'image-${productModel.id}',
-                    child: Image.asset(
-                      productModel.photo,
+                    child: Image.network(
+                      "https://www.akorstore.com/storage/images/${productModel.photo}",
                       height: MediaQuery.of(context).size.width,
                       width: MediaQuery.of(context).size.width,
                     ),

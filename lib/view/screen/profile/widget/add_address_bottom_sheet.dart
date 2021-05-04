@@ -8,6 +8,7 @@ import 'package:sixvalley_ui_kit/utill/dimensions.dart';
 import 'package:sixvalley_ui_kit/view/basewidget/button/custom_button.dart';
 import 'package:sixvalley_ui_kit/view/basewidget/textfield/custom_textfield.dart';
 import 'package:provider/provider.dart';
+import 'package:sixvalley_ui_kit/provider/auth_provider.dart';
 
 class AddAddressBottomSheet extends StatefulWidget {
   @override
@@ -141,6 +142,8 @@ class _AddAddressBottomSheetState extends State<AddAddressBottomSheet> {
     } else {
       Provider.of<ProfileProvider>(context, listen: false).setAddAddressErrorText(null);
       AddressModel addressModel = AddressModel();
+      String id = Provider.of<AuthProvider>(context, listen: false).getUserToken();
+      addressModel.customerId = id;
       addressModel.contactPersonName = 'x';
       addressModel.addressType = Provider.of<ProfileProvider>(context, listen: false).addressType;
       addressModel.city = _cityNameController.text;
@@ -151,7 +154,7 @@ class _AddAddressBottomSheetState extends State<AddAddressBottomSheet> {
       Provider.of<ProfileProvider>(context, listen: false).addAddress(addressModel);
       _cityNameController.clear();
       //_zipCodeController.clear();
-      //Provider.of<ProfileProvider>(context, listen: false).initAddressList();
+      Provider.of<ProfileProvider>(context, listen: false).initAddressList(id);
       Navigator.pop(context);
     }
   }

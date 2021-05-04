@@ -60,12 +60,20 @@ dependencies:
   #Notification push
   flutter_local_notifications: ^4.0.1+2
   #Background task
-  workmanager: ^0.2.3
+  #workmanager: ^0.2.3
   #background_fetch: ^0.7.1
+  dbcrypt: ^1.0.0
+  nanoid: ^0.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.8.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/small_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -96,6 +104,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/akorit_text.png
+    - assets/images/small_logo.png
     - assets/language/
 
   fonts:

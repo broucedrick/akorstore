@@ -8,6 +8,7 @@ import 'package:sixvalley_ui_kit/data/repository/order_repo.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+import 'package:nanoid/nanoid.dart';
 
 class OrderProvider with ChangeNotifier {
   final OrderRepo orderRepo;
@@ -34,19 +35,28 @@ class OrderProvider with ChangeNotifier {
   List<OrderModel> _orderList = [];
   List<OrderModel> get orderList => _orderList;
 
+  void makeOrder(List<OrderModel> orders){
+    orders.forEach((order) {
+      setOrder(order);
+    });
+  }
+
   void setOrder(OrderModel ords) async{
     DateTime now = new DateTime.now();
     DateTime date = new DateTime(now.year, now.month, now.day);
+    String orderId = "AK"+nanoid(6).toUpperCase()+date.toString().split(" ")[0].replaceAll("-", "");
     Map data = {
       "etat": ords.orderStatus,
       "montant" : int.parse(ords.orderAmount.replaceAll(".0", "")),
       "adresse" : ords.shippingAddress,
       "paiementMethode" : ords.paymentMethod,
+      "paiementstatut": ords.paymentStatus,
       "refTrans" : ords.transactionRef,
-      "oderId" : ords.id,
-      "idUser" : ords.customerId,
+      "oderId" : orderId,
+      "idUser" : ords.customerType,
       "date": date.toString(),
-      "boutiqueId": ords.customerId
+      "custumerid": ords.customerId,
+      "livreurid": "null"
     };
 
     String body = json.encode(data);
@@ -59,9 +69,9 @@ class OrderProvider with ChangeNotifier {
     );
 
     if(response.statusCode == 201){
-      debugPrint("Order ${ords.id} successful Sets");
+      debugPrint("Order ${orderId} successful Sets");
       ords.cartProductList.forEach((element) {
-        setOrderProduct(element, ords.id);
+        setOrderProduct(element, orderId);
       });
     }else{
       debugPrint("Erreur : ${response.body}");
@@ -73,8 +83,8 @@ class OrderProvider with ChangeNotifier {
     DateTime date = new DateTime(now.year, now.month, now.day);
     Map data = {
       "idProduit": prods.id.toString(),
-      "idCommande": orderId.toString(),
-      "quantite": prods.quantity,
+      "idCommande": orderId,
+      "quantite": prods.quantity.toString(),
       "somme": prods.price.toInt(),
       "date": date.toString(),
       "image": prods.image,
@@ -89,7 +99,7 @@ class OrderProvider with ChangeNotifier {
         headers: {"Content-Type": "application/json"},
         body: body
     );
-
+    debugPrint(response.statusCode.toString());
     if(response.statusCode == 201){
       debugPrint("Product ${prods.id} for order ${orderId} successful sets");
     }else{
@@ -102,7 +112,7 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void initOrderList() async {
+  void initOrderList(String id) async {
     _pendingList = [];
     _deliveredList = [];
     _canceledList = [];
@@ -112,14 +122,16 @@ class OrderProvider with ChangeNotifier {
     if(response.statusCode == 200){
       List res = json.decode(response.body)['hydra:member'];
       res.forEach((element) {
-        debugPrint("ID : ${element['oderId']}");
-        OrderModel model = OrderModel(id: element['oderId'], customerId: element['idUser'], shippingAddress: element['adresse'], orderStatus: element['etat'], paymentMethod: element['paiementMethode'], transactionRef: element['refTrans'], createdAt: element["date"], updatedAt: element["date"], orderAmount: element['montant'].toString());
-        if (model.orderStatus == 'pending') {
-          _pendingList.add(model);
-        } else if (model.orderStatus == 'delivered') {
-          _deliveredList.add(model);
-        } else if (model.orderStatus == 'cancelled') {
-          _canceledList.add(model);
+        if(element['idUser'] == id){
+          debugPrint("ID : ${element['oderId']}");
+          OrderModel model = OrderModel(id: element['oderId'], customerId: element['custumerid'], shippingAddress: element['adresse'], orderStatus: element['etat'], paymentMethod: element['paiementMethode'], transactionRef: element['refTrans'], createdAt: element["date"], updatedAt: element["date"], orderAmount: element['montant'].toString(), paymentStatus: element['paiementstatut']);
+          if (model.orderStatus == 'termine') {
+            _deliveredList.add(model);
+          } else if (model.orderStatus == 'annule') {
+            _canceledList.add(model);
+          }else{
+            _pendingList.add(model);
+          }
         }
       });
       notifyListeners();

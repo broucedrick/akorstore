@@ -4,37 +4,19 @@ class CartModel {
   String _name;
   String _seller;
   double _price;
-  //double _discountedPrice;
   int _quantity;
-  //String _variant;
-  //String _variation;
-  //double _discount;
-  //String _discountType;
-  //double _tax;
-  //String _taxType;
-  //int _shippingMethodId;
 
   CartModel(this._id, this._image, this._name, this._seller, this._price, this._quantity);
 
-  //String get variant => _variant;
-  //String get variation => _variation;
-  // ignore: unnecessary_getters_setters
   int get quantity => _quantity;
-  // ignore: unnecessary_getters_setters
   set quantity(int value) {
     _quantity = value;
   }
   double get price => _price;
-  //double get discountedPrice => _discountedPrice;
   String get name => _name;
   String get seller => _seller;
   String get image => _image;
   int get id => _id;
-  //double get discount => _discount;
-  //String get discountType => _discountType;
-  //double get tax => _tax;
-  //String get taxType => _taxType;
-  //int get shippingMethodId => _shippingMethodId;
 
   CartModel.fromJson(Map<String, dynamic> json) {
     _id = json['id'] as int;

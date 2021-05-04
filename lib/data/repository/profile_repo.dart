@@ -4,6 +4,9 @@ import 'package:sixvalley_ui_kit/data/model/response/address_model.dart';
 import 'package:sixvalley_ui_kit/data/model/response/user_info_model.dart';
 import 'package:sixvalley_ui_kit/utill/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:async';
 
 class ProfileRepo {
   final SharedPreferences sharedPreferences;
@@ -25,10 +28,23 @@ class ProfileRepo {
     return userInfoModel;
   }
 
-  List<AddressModel> getAllAddress(String id) {
+  Future<List<AddressModel>> getAllAddress(String id) async {
     List<AddressModel> addressList = [
-      AddressModel(id: 1, customerId: '1', contactPersonName: 'John Doe', addressType: 'Home', address: 'Dhaka, Bangladesh'),
+      //AddressModel(id: 1, customerId: '1', contactPersonName: 'John Doe', addressType: 'Home', address: 'Dhaka, Bangladesh'),
     ];
+
+    var response = await http.get("https://app.akorstore.com/api/adresses");
+    if(response.statusCode == 200){
+      List res = json.decode(response.body)['hydra:member'];
+      debugPrint(res.toString());
+      res.forEach((element) {
+        if(element['iduser'] == id){
+          addressList.add(AddressModel(id: element['id'], customerId: element['iduser'], city: element['ville'], addressType: element['typeadresse'], address: element['adresse']));
+        }else{
+          addressList = [];
+        }
+      });
+    }
     return addressList;
   }
 

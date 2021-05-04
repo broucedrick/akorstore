@@ -120,15 +120,15 @@ class ProductTitleView extends StatelessWidget {
               //   fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
               // )),
 
-              Text('${details.orderCount} orders | ', style: titilliumRegular.copyWith(
-                color: Theme.of(context).hintColor,
-                fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
-              )),
-
-              Text('${details.wishCount} wish', style: titilliumRegular.copyWith(
-                color: Theme.of(context).hintColor,
-                fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
-              )),
+              // Text('${details.orderCount} orders | ', style: titilliumRegular.copyWith(
+              //   color: Theme.of(context).hintColor,
+              //   fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
+              // )),
+              //
+              // Text('${details.wishCount} wish', style: titilliumRegular.copyWith(
+              //   color: Theme.of(context).hintColor,
+              //   fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
+              // )),
 
             ]),
 

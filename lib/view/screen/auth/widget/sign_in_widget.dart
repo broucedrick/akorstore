@@ -7,6 +7,7 @@ import 'package:sixvalley_ui_kit/utill/color_resources.dart';
 import 'package:sixvalley_ui_kit/utill/custom_themes.dart';
 import 'package:sixvalley_ui_kit/utill/dimensions.dart';
 import 'package:sixvalley_ui_kit/view/basewidget/button/custom_button.dart';
+import 'package:sixvalley_ui_kit/view/basewidget/custom_loader.dart';
 import 'package:sixvalley_ui_kit/view/basewidget/show_custom_snakbar.dart';
 import 'package:sixvalley_ui_kit/view/basewidget/textfield/custom_password_textfield.dart';
 import 'package:sixvalley_ui_kit/view/basewidget/textfield/custom_textfield.dart';
@@ -34,8 +35,8 @@ class _SignInWidgetState extends State<SignInWidget> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
 
-    _emailController.text = Provider.of<AuthProvider>(context, listen: false).getUserEmail() ?? null;
-    _passwordController.text = Provider.of<AuthProvider>(context, listen: false).getUserPassword() ?? null;
+    // _emailController.text = Provider.of<AuthProvider>(context, listen: false).getUserEmail() ?? null;
+    // _passwordController.text = Provider.of<AuthProvider>(context, listen: false).getUserPassword() ?? null;
   }
 
   @override
@@ -54,22 +55,30 @@ class _SignInWidgetState extends State<SignInWidget> {
       _formKeyLogin.currentState.save();
 
       if (_emailController.text.isEmpty) {
-        showCustomSnackBar(getTranslated('EMAIL_MUST_BE_REQUIRED', context), context);
+        showCustomSnackBar("Votre identifiant est obligatoire", context);
       } else if (_passwordController.text.isEmpty) {
-        showCustomSnackBar(getTranslated('PASSWORD_MUST_BE_REQUIRED', context), context);
+        showCustomSnackBar("Votre mot de passe est obligatoire", context);
       } else {
 
-        if (Provider.of<AuthProvider>(context, listen: false).isRemember) {
-          Provider.of<AuthProvider>(context, listen: false).saveUserEmail(_emailController.text, _passwordController.text);
-        } else {
-          Provider.of<AuthProvider>(context, listen: false).clearUserEmailAndPassword();
-        }
+        // if (Provider.of<AuthProvider>(context, listen: false).isRemember) {
+        //   Provider.of<AuthProvider>(context, listen: false).saveUserEmail(_emailController.text, _passwordController.text);
+        // } else {
+        //   Provider.of<AuthProvider>(context, listen: false).clearUserEmailAndPassword();
+        // }
 
         loginBody.email = _emailController.text;
         loginBody.password = _passwordController.text;
-        await Provider.of<AuthProvider>(context, listen: false).login(loginBody);
-        Provider.of<ProfileProvider>(context, listen: false).getUserInfo();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DashBoardScreen()));
+        await Provider.of<AuthProvider>(context, listen: false).login(loginBody).then((value){
+          if(value){
+            showCustomSnackBar("Connexion effectutée", context, isError: false);
+            debugPrint("UserID: ${Provider.of<AuthProvider>(context, listen: false).getUserToken()}");
+            Provider.of<ProfileProvider>(context, listen: false).getUserInfo(Provider.of<AuthProvider>(context, listen: false).getUserToken());
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DashBoardScreen()));
+          }else{
+            //showCustomSnackBar("Identifiant ou mot de passe incorrecte", context);
+          }
+        });
+
       }
     }
   }
@@ -77,8 +86,8 @@ class _SignInWidgetState extends State<SignInWidget> {
   @override
   Widget build(BuildContext context) {
     Provider.of<AuthProvider>(context, listen: false).isRemember;
-    _emailController.text = 'Johndoe@gmail.com';
-    _passwordController.text = '123456';
+    //_emailController.text = 'Johndoe@gmail.com';
+    //_passwordController.text = '123456';
 
     return Form(
       key: _formKeyLogin,
@@ -90,7 +99,7 @@ class _SignInWidgetState extends State<SignInWidget> {
               margin:
                   EdgeInsets.only(left: Dimensions.MARGIN_SIZE_LARGE, right: Dimensions.MARGIN_SIZE_LARGE, bottom: Dimensions.MARGIN_SIZE_SMALL),
               child: CustomTextField(
-                hintText: getTranslated('ENTER_YOUR_EMAIL', context),
+                hintText: "Identifiant",
                 focusNode: _emailNode,
                 nextNode: _passNode,
                 textInputType: TextInputType.emailAddress,
@@ -102,7 +111,7 @@ class _SignInWidgetState extends State<SignInWidget> {
               margin:
                   EdgeInsets.only(left: Dimensions.MARGIN_SIZE_LARGE, right: Dimensions.MARGIN_SIZE_LARGE, bottom: Dimensions.MARGIN_SIZE_DEFAULT),
               child: CustomPasswordTextField(
-                hintTxt: getTranslated('ENTER_YOUR_PASSWORD', context),
+                hintTxt: "Mot de passe",
                 textInputAction: TextInputAction.done,
                 focusNode: _passNode,
                 controller: _passwordController,
@@ -126,13 +135,13 @@ class _SignInWidgetState extends State<SignInWidget> {
                     ),
                     //
 
-                    Text(getTranslated('REMEMBER', context), style: titilliumRegular),
+                    Text("Se souvenir", style: titilliumRegular),
                   ],
                 ),
-                InkWell(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ForgetPasswordScreen())),
-                  child: Text(getTranslated('FORGET_PASSWORD', context), style: titilliumRegular.copyWith(color: ColorResources.getLightSkyBlue(context))),
-                ),
+                // InkWell(
+                //   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ForgetPasswordScreen())),
+                //   child: Text("Mot de passe oublié", style: titilliumRegular.copyWith(color: ColorResources.getLightSkyBlue(context))),
+                // ),
               ],
             ),
           ),
@@ -140,11 +149,11 @@ class _SignInWidgetState extends State<SignInWidget> {
           // for signin button
           Container(
             margin: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 30),
-            child: CustomButton(onTap: loginUser, buttonText: getTranslated('SIGN_IN', context)),
+            child: CustomButton(onTap: loginUser, buttonText: "Connexion"),
           ),
 
           SizedBox(height: 20),
-          Center(child: Text(getTranslated('OR', context), style: titilliumRegular.copyWith(fontSize: 12))),
+          Center(child: Text("Ou", style: titilliumRegular.copyWith(fontSize: 12))),
 
           //for order as guest
           GestureDetector(
@@ -161,7 +170,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: ColorResources.getHint(context), width: 1.0),
               ),
-              child: Text(getTranslated('CONTINUE_AS_GUEST', context), style: titilliumSemiBold.copyWith(color: ColorResources.getPrimary(context))),
+              child: Text("Continuer sans se connecter", style: titilliumSemiBold.copyWith(color: ColorResources.getPrimary(context))),
             ),
           ),
         ],

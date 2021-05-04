@@ -26,11 +26,13 @@ import 'package:sixvalley_ui_kit/view/screen/checkout/widget/shipping_method_bot
 import 'package:sixvalley_ui_kit/view/screen/dashboard/dashboard_screen.dart';
 import 'package:sixvalley_ui_kit/view/screen/payment/payment_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:sixvalley_ui_kit/provider/auth_provider.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final List<CartModel> cartList;
+  final List<List<CartModel>> cartLists;
   final bool fromProductDetails;
-  CheckoutScreen({@required this.cartList, this.fromProductDetails = false});
+  CheckoutScreen({@required this.cartList, this.fromProductDetails = false, this.cartLists});
 
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
@@ -46,7 +48,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   void initState() {
     super.initState();
-    String id = Provider.of<ProfileProvider>(context, listen: false).userInfoModel.id.toString();
+    String id = Provider.of<AuthProvider>(context, listen: false).getUserToken();
     Provider.of<ProfileProvider>(context, listen: false).initAddressList(id);
     Provider.of<ProfileProvider>(context, listen: false).initAddressTypeList();
     //Provider.of<OrderProvider>(context, listen: false).initShippingList();
@@ -61,6 +63,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     });
   }
 
+  List<String> paiementM = ["Payer à la livraison"];
+  int radioValue = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,59 +73,76 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       resizeToAvoidBottomPadding: true,
 
       bottomNavigationBar: Container(
-        height: 60,
+        height: 190,
         padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: Dimensions.PADDING_SIZE_DEFAULT),
         decoration: BoxDecoration(
           color: ColorResources.getPrimary(context),
           borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))
         ),
-        child: Consumer<OrderProvider>(
-          builder: (context, order, child) {
-            //double _shippingCost = order.shippingIndex != null ? double.parse(order.shippingList[order.shippingIndex].cost) : 0;
-            double _couponDiscount = Provider.of<CouponProvider>(context).discount != null ? Provider.of<CouponProvider>(context).discount : 0;
-            return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(
-                _order.toString(),
-                style: titilliumSemiBold.copyWith(color: Theme.of(context).accentColor),
-              ),
-              !Provider.of<OrderProvider>(context).isLoading ? Builder(
-                builder: (c) => RaisedButton(
-                  onPressed: () async {
-                    if(order.addressIndex == null) {
-                      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Sélectionnez une adresse de livraison'), backgroundColor: Colors.red));
-                    } else {
-                      List<Cart> carts = [];
-                      for(int index=0; index < widget.cartList.length; index++) {
-                        CartModel cart = widget.cartList[index];
-                        carts.add(Cart(
-                          cart.id.toString(), cart.price.toInt(), cart.quantity));
-                      }
-                      OrderModel _orderm = OrderModel(id: "106314", customerId: "1", cartProductList: widget.cartList, paymentStatus: "success", paymentMethod: "Orange Money", orderAmount: _order.toString(), shippingAddress: Provider.of<ProfileProvider>(context, listen: false).addressList[Provider.of<OrderProvider>(context, listen: false).addressIndex].address, createdAt: '12-12-20', orderStatus: 'pending');
-                      debugPrint("ORDER ID : ${_orderm}");
-                      Provider.of<OrderProvider>(context, listen: false).setOrder(_orderm);
-                      // new OrderRepo.addOrder(_orderm);
-                      debugPrint("ORDER OK !");
-                      //double couponDiscount = Provider.of<CouponProvider>(context, listen: false).discount != null ? Provider.of<CouponProvider>(context, listen: false).discount : 0;
-                      Provider.of<OrderProvider>(context, listen: false).placeOrder(OrderPlaceModel(
-                        CustomerInfo(
-                          Provider.of<ProfileProvider>(context, listen: false).addressList[Provider.of<OrderProvider>(context, listen: false).addressIndex].id.toString(),
-                          Provider.of<ProfileProvider>(context, listen: false).addressList[Provider.of<OrderProvider>(context, listen: false).addressIndex].address,
-                        ),
-                        carts, 'visa'
-                      ), _callback, widget.cartList);
+        child: Column(
+          children: [
+            // RadioListTile(value: 0, activeColor: Colors.white, title: Text("Payer maintenant", style: TextStyle(color: Colors.white)), groupValue: radioValue, onChanged: (value){
+            //   setState(() {
+            //     radioValue = value;
+            //   });
+            // }),
+            RadioListTile(value: 0, activeColor: Colors.white, title: Text("Payer à la livraison", style: TextStyle(color: Colors.white)), groupValue: radioValue, onChanged: (value){
+              setState(() {
+                radioValue = value;
+              });
+            }),
+            Consumer<OrderProvider>(
+              builder: (context, order, child) {
+                //double _shippingCost = order.shippingIndex != null ? double.parse(order.shippingList[order.shippingIndex].cost) : 0;
+                double _couponDiscount = Provider.of<CouponProvider>(context).discount != null ? Provider.of<CouponProvider>(context).discount : 0;
+                return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Text(
+                    "${_order.toString()} FCFA",
+                    style: titilliumSemiBold.copyWith(color: Theme.of(context).accentColor),
+                  ),
+                  !Provider.of<OrderProvider>(context).isLoading ? Builder(
+                    builder: (c) => RaisedButton(
+                      onPressed: () async {
+                        if(order.addressIndex == null) {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Sélectionnez une adresse de livraison'), backgroundColor: Colors.red));
+                        } else {
+                          List<Cart> carts = [];
+                          for(int index=0; index < widget.cartList.length; index++) {
+                            CartModel cart = widget.cartList[index];
+                            carts.add(Cart(
+                              cart.id.toString(), cart.price.toInt(), cart.quantity));
+                          }
+                          widget.cartLists.forEach((element) {
+                            OrderModel _orderm = OrderModel(customerId: element[0].seller, cartProductList: element, paymentStatus: "Non payé", paymentMethod: "Payer à la livraison", orderAmount: _order.toString(), shippingAddress: Provider.of<ProfileProvider>(context, listen: false).addressList[Provider.of<OrderProvider>(context, listen: false).addressIndex].address, orderStatus: 'attente', customerType: Provider.of<AuthProvider>(context, listen: false).getUserToken());
+                            debugPrint("ORDER ID : ${_orderm}");
+                            Provider.of<OrderProvider>(context, listen: false).setOrder(_orderm);
+                            // new OrderRepo.addOrder(_orderm);
+                            debugPrint("ORDER OK !");
+                          });
 
-                    }
-                  },
-                  color: Theme.of(context).accentColor,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  child: Text('Valider la commande', style: titilliumSemiBold.copyWith(
-                    fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
-                    color: ColorResources.getPrimary(context),
-                  )),
-                ),
-              ) : Container(height: 30, width: 100, alignment: Alignment.center, child: CircularProgressIndicator()),
-            ]);
-          },
+                          //double couponDiscount = Provider.of<CouponProvider>(context, listen: false).discount != null ? Provider.of<CouponProvider>(context, listen: false).discount : 0;
+                          Provider.of<OrderProvider>(context, listen: false).placeOrder(OrderPlaceModel(
+                            CustomerInfo(
+                              Provider.of<ProfileProvider>(context, listen: false).addressList[Provider.of<OrderProvider>(context, listen: false).addressIndex].id.toString(),
+                              Provider.of<ProfileProvider>(context, listen: false).addressList[Provider.of<OrderProvider>(context, listen: false).addressIndex].address,
+                            ),
+                            carts, 'visa'
+                          ), _callback, widget.cartList);
+
+                        }
+                      },
+                      color: Theme.of(context).accentColor,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      child: Text('Valider la commande', style: titilliumSemiBold.copyWith(
+                        fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
+                        color: ColorResources.getPrimary(context),
+                      )),
+                    ),
+                  ) : Container(height: 30, width: 100, alignment: Alignment.center, child: CircularProgressIndicator()),
+                ]);
+              },
+            ),
+          ],
         ),
       ),
 
@@ -190,8 +212,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   Padding(
                     padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                     child: Row(children: [
-                      Image.asset(
-                        widget.cartList[0].image,
+                      Image.network(
+                        "https://www.akorstore.com/storage/images/${widget.cartList[0].image}",
                         fit: BoxFit.cover,
                         width: 50,
                         height: 50,
@@ -352,8 +374,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => DashBoardScreen()), (route) => false);
       showAnimatedDialog(context, MyDialog(
         icon: Icons.done,
-        title: 'Paiment effectué',
-        description: 'Paiement effectué avec succès',
+        title: 'Commande effectuée',
+        description: 'Commande effectuée avec succès',
       ), dismissible: false, isFlip: true);
     }else {
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message), backgroundColor: ColorResources.RED));
